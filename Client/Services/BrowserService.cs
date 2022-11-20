@@ -11,24 +11,12 @@ namespace Client.Services
    public class BrowserService
    {
 
-      public DataState state { get; set; } = default!;
-
       private readonly IJSRuntime _js;
 
       public BrowserService(IJSRuntime js)
       {
          _js = js;
-      }
-
-      public async Task<BrowserDimension> GetDimensions()
-      {
-         return await _js.InvokeAsync<BrowserDimension>("interop.getDimensions");
-      }
-
-      public async Task<BrowserDimension> GetRenderArea()
-      {
-         return await _js.InvokeAsync<BrowserDimension>("interop.getRenderArea");
-      }
+      }    
 
       public async Task<bool> ConsoleLog(string logContent)
       {
@@ -53,9 +41,4 @@ namespace Client.Services
 
    }
 
-   public class BrowserDimension
-   {
-      public int Width { get; set; }
-      public int Height { get; set; }
-   }
 }
