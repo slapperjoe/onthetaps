@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BlazorApp.Shared
+namespace OnTheTaps.Shared
 {
     public class WeatherForecast
     {
