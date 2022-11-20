@@ -1,0 +1,30 @@
+﻿@page "/Login"
+@namespace Client.Pages
+
+@inject NavigationManager NavManager
+
+<PageTitle>Login</PageTitle>
+
+@using System.Net.Http
+@using System.Threading
+@using System.Web
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using MudBlazor
+@using System.Text;
+
+<MudText Typo="Typo.h5">Pick login provider</MudText>
+<MudGrid>
+	<MudItem xs="12" md="6" lg="4">
+		<MudIconButton Icon="@Icons.Custom.Brands.Microsoft" Color="Color.Primary" OnClick='() => DoLogin("aad")' />
+	</MudItem>
+
+</MudGrid>
+
+@code {
+
+	private void DoLogin(string loginType)
+	{
+		NavManager.NavigateTo($"/.auth/login/{loginType}?post_login_redirect_uri=https://www.onthetaps.com/taps", true);
+	}
+}

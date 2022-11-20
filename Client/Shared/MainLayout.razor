@@ -4,11 +4,16 @@
 @using System.Net.Http
 @using BigBeerData.Shared
 
+@inject NavigationManager NavManager
+
+
 <MudThemeProvider Theme="BeerTheme" />
 
 <MudLayout>
 	<MudAppBar>
 		<img src="/img/onthebeers.png" alt="On The Beers/Big Beer Data" style="max-height: 100%;" />
+		<MudSpacer />
+		<MudLink Href="/Login">Login</MudLink>
 	</MudAppBar>
 	<MudMainContent>
 		<MudContainer MaxWidth="MaxWidth.False">
