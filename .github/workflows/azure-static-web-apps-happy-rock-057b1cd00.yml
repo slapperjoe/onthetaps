@@ -18,6 +18,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      - name: Check out BBD for shared
+        uses: actions/checkout@v2
+        with:
+          repository: slapperjoe/BigBeerData
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
