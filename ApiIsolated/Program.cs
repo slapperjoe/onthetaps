@@ -1,19 +1,27 @@
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Azure.Functions.Worker.Configuration;
 
-namespace ApiIsolated
-{
-    public class Program
-    {
-        public static void Main()
+
+using BigBeerData.Shared;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+using System.Net.Http.Headers;
+using System;
+
+IConfiguration config = new ConfigurationBuilder()
+    .AddEnvironmentVariables()
+    .Build();
+
+var host = new HostBuilder()
+      .ConfigureFunctionsWorkerDefaults()
+        .ConfigureServices(builder =>
         {
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+           builder.AddDbContext<BigBeerContext>(opt =>
+                                   opt.UseSqlServer(
+                                       config["DBConnection"]
+                                   ));
+        })
+      .Build();
 
-            host.Run();
-        }
-    }
-}
+await host.RunAsync();

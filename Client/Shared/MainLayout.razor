@@ -1,17 +1,35 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+@using System.Net.Http
+@using BigBeerData.Shared
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<MudThemeProvider Theme="BeerTheme" />
+
+<MudLayout>
+	<MudAppBar>
+		<img src="/img/onthebeers.png" alt="On The Beers/Big Beer Data" style="max-height: 100%;" />
+	</MudAppBar>
+	<MudMainContent>
+		<MudContainer MaxWidth="MaxWidth.False">
+				@Body
+		</MudContainer>
+	</MudMainContent>
+</MudLayout>
+
+@code {
+
+
+	MudTheme BeerTheme = new MudTheme()
+		{
+			Palette = new Palette()
+			{
+				Primary = Colors.Yellow.Default,
+				Secondary = Colors.Brown.Darken2,
+				AppbarBackground = Colors.Shades.White,
+				AppbarText = Colors.Brown.Darken3
+			},
+		};
+
+	}
+
