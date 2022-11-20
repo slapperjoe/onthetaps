@@ -16,7 +16,7 @@ jobs:
     name: Build and Deploy Job
     
     steps:
-      - uses: BigBeerData/.github/workflows/azure-static-web-apps-brave-bay-011b7ee10.yml@main
+      - uses: slapperjoe/BigBeerData/.github/workflows/azure-static-web-apps-brave-bay-011b7ee10.yml@main
       - uses: actions/checkout@v2
         with:
           submodules: true      
