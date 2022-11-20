@@ -10,13 +10,11 @@ on:
       - main
 
 jobs:  
-  build_and_deploy_job:            
+  build_and_deploy_job: 
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
-    
+    name: Build and Deploy Job    
     steps:
-      - uses: slapperjoe/BigBeerData/.github/workflows/azure-static-web-apps-brave-bay-011b7ee10.yml@main
       - uses: actions/checkout@v2
         with:
           submodules: true      
