@@ -16,7 +16,9 @@
 		<MudSpacer />
 		<AuthorizeView>
 			<Authorized>
-				Hello, @context.User.Identity.Name!
+				<MudText Typo="Typo.body1">
+					Hello, @(context.User.Identity.Name)&nbsp;
+				</MudText>
 				<MudLink Href="/.auth/logout?post_logout_redirect_uri=/">Logout</MudLink>
 			</Authorized>
 			<NotAuthorized>
@@ -38,10 +40,11 @@
 		{
 			Palette = new Palette()
 			{
-				Primary = Colors.Yellow.Default,
+				Primary = Colors.Yellow.Darken3,
 				Secondary = Colors.Brown.Darken2,
 				AppbarBackground = Colors.Shades.White,
-				AppbarText = Colors.Brown.Darken3
+				AppbarText = Colors.Brown.Darken3,
+				
 			},
 		};
 
