@@ -166,7 +166,7 @@
 	}
 
 	private async void UpdateData(int i)
-	{
+	{	
 		var loadBox = imageRef[i - 1];
 		await Browser.ShowLoadBox(loadBox);
 
@@ -177,21 +177,20 @@
 		var response =
 			await Http.PostAsync("api/DataUpload", new StringContent(JsonSerializer.Serialize(toUpdate), Encoding.UTF8, "application/json"));
 
+		await CheckResponse(response);
+
 		await Browser.HideLoadBox(loadBox);
 
+		StateHasChanged();
+	}
+
+	private async Task<bool?> CheckResponse(HttpResponseMessage response){
 		if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
 		{
-			var parameters = new DialogParameters();
-			parameters.Add("ContentText", "You must be logged in to perform this action");
-			parameters.Add("ButtonText", "Delete");
-			parameters.Add("Color", Color.Error);
-
-			var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-
-			DialogService.Show<Index>("Unauthorised", parameters, options);
-
+			var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small };
+			return await DialogService.ShowMessageBox("Unauthorised", "You must be logged in to perform this action", options: options);
 		}
-		StateHasChanged();
+		return null;
 	}
 
 	private async void UploadFiles(int i, InputFileChangeEventArgs e)
