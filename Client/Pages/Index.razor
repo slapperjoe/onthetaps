@@ -117,6 +117,8 @@
 
 @code {
 
+	[Inject] private IDialogService DialogService { get; set; }
+
 	const int TAP_COUNT = 6;
 
 	ElementReference[] imageRef { get; set; } = new ElementReference[TAP_COUNT];
@@ -176,6 +178,19 @@
 			await Http.PostAsync("api/DataUpload", new StringContent(JsonSerializer.Serialize(toUpdate), Encoding.UTF8, "application/json"));
 
 		await Browser.HideLoadBox(loadBox);
+
+		if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+		{
+			var parameters = new DialogParameters();
+			parameters.Add("ContentText", "You must be logged in to perform this action");
+			parameters.Add("ButtonText", "Delete");
+			parameters.Add("Color", Color.Error);
+
+			var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+			DialogService.Show<Index>("Unauthorised", parameters, options);
+
+		}
 		StateHasChanged();
 	}
 
