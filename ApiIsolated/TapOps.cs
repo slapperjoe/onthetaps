@@ -18,6 +18,8 @@ using SixLabors.ImageSharp.Formats.Png;
 using Image = SixLabors.ImageSharp.Image;
 using Newtonsoft.Json;
 using BigBeerData.Shared.DTOs;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Api.TapOps
 {
@@ -191,5 +193,5 @@ namespace Api.TapOps
          }
          return await clientHub.SendWindowsNativeNotificationAsync(beerToast.InnerXml);
       }
-   }
+	}
 }

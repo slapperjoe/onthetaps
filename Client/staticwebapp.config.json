@@ -1,5 +1,15 @@
 {
-    "navigationFallback": {
-        "rewrite": "/index.html"
-    }
+   "navigationFallback": {
+      "rewrite": "/index.html"
+   },
+   "routes": [
+      {
+         "route": "/api/*",
+         "methods": [ "PUT", "POST", "PATCH", "DELETE" ],
+         "allowedRoles": [ "authenticated" ]
+      }
+   ],
+   "mimeTypes": {
+      ".json": "text/json"
+   }
 }
