@@ -6,7 +6,7 @@
       {
          "route": "/api/*",
          "methods": [ "PUT", "POST", "PATCH", "DELETE" ],
-         "allowedRoles": [ "authenticated" ]
+         "allowedRoles": [ "tochka" ]
       }
    ],
    "mimeTypes": {
