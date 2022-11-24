@@ -62,13 +62,23 @@
 
 						<MudItem xs="12" md="6" lg="4">
 							<MudPaper Outlined="true" style=" text-align: center; position: relative; padding: 16px; height: 100%; display: flex; flex-direction: column;">
+								@if (context.User.IsInRole("tochka")){
 								<InputFile id="@fileBox" OnChange="(e) => UploadFiles(localIndex, e)" hidden accept="image/png, image/gif, image/jpeg" />
 
 								<MudFab HtmlTag="label"
 						Color="Color.Dark"
 						Icon="@Icons.Filled.Image"
 						label="@tapLabel"
-						for="@fileBox" />
+				for="@fileBox" />
+								} else
+								{
+
+									@foreach (var clam in context.User.Claims)
+									{
+										@clam.Subject @clam.Value
+										<br/>
+									}
+								}
 								<MudElement Style="flex: 100000"></MudElement>
 								<MudImage Fluid="true" Src='@($"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{localIndex}.png?m={DateTime.Now.ToBinary()}")'
 						Alt="@tapLabel" Elevation="25" Class="rounded-lg" />

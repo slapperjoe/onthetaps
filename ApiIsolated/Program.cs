@@ -1,13 +1,14 @@
 using Microsoft.Extensions.Hosting;
 
 
-using BigBeerData.Shared;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 using System.Net.Http.Headers;
 using System;
+using OnTheTaps.Shared.Models;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
@@ -17,7 +18,7 @@ var host = new HostBuilder()
       .ConfigureFunctionsWorkerDefaults()
         .ConfigureServices(builder =>
         {
-           builder.AddDbContext<BigBeerContext>(opt =>
+           builder.AddDbContext<BigBeerDataCoreContext>(opt =>
                                    opt.UseSqlServer(
                                        config["DBConnection"]
                                    ));
