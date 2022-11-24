@@ -4,9 +4,9 @@
 		"userId": "19694f3892aa48dab7c0046b24f7d499",
 		"userDetails": "markr@live.com",
 		"userRoles": [
+			"tochka",
 			"anonymous",
-			"authenticated",
-			"tochka"
+			"authenticated"
 		]
 	}
 }

@@ -26,7 +26,7 @@ namespace Client.Authentication
 			try
 			{
 				var authDataUrl = config.GetValue<string>("StaticWebAppsAuthentication:AuthenticationDataUrl", "/.auth/me");
-				var data = await http.GetFromJsonAsync<AuthenticationData>(authDataUrl);
+				var data = await http.GetFromJsonAsync<AuthenticationData>($"{authDataUrl}?{Guid.NewGuid()}");
 
 				var principal = data.ClientPrincipal;
 				principal.UserRoles = principal.UserRoles.Except(new string[] { "anonymous" }, StringComparer.CurrentCultureIgnoreCase);
