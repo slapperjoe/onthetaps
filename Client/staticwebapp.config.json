@@ -1,12 +1,55 @@
 {
    "navigationFallback": {
-      "rewrite": "/index.html"
+      "rewrite": "/index.html",
+      "exclude": [
+         "/css/*",
+         "/img/*",
+         "/js/*"
+      ]
+   },
+   "responseOverrides": {
+      "401": {
+         "statusCode": 302,
+         "redirect": "/login"
+      }
    },
    "routes": [
       {
          "route": "/api/*",
          "methods": [ "PUT", "POST", "PATCH", "DELETE" ],
          "allowedRoles": [ "tochka" ]
+      },
+      {
+         "route": "/.auth/login/aad",
+         "allowedRoles": [ "anonymous" ]
+      },
+      {
+         "route": "/.auth/login/apple",
+         "allowedRoles": [ "anonymous", "authenticated" ],
+         "statusCode": 404
+      },
+      {
+         "route": "/.auth/login/b2c",
+         "allowedRoles": [ "anonymous", "authenticated" ],
+         "statusCode": 404
+      },
+      {
+         "route": "/.auth/login/facebook",
+         "allowedRoles": [ "anonymous", "authenticated" ],
+         "statusCode": 404
+      },
+      {
+         "route": "/.auth/login/github",
+         "allowedRoles": [ "anonymous", "authenticated" ],
+         "statusCode": 404
+      },
+      {
+         "route": "/.auth/login/google",
+         "allowedRoles": [ "anonyous" ]
+      },
+      {
+         "route": "/.auth/login/twitter",
+         "allowedRoles": [ "anonymous" ]
       }
    ],
    "mimeTypes": {
@@ -14,10 +57,21 @@
    },
    "auth": {
       "identityProviders": {
+
+
          "facebook": {
+            "enabled": true,
+
             "registration": {
                "appIdSettingName": "FACEBOOK_APP_ID",
                "appSecretSettingName": "FACEBOOK_APP_SECRET"
+            },
+            "login": {
+               "scopes": [
+                  "public_profile",
+                  "email"
+               ],
+               "loginParameterNames": []
             }
          }
       }
