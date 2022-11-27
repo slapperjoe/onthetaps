@@ -11,5 +11,15 @@
    ],
    "mimeTypes": {
       ".json": "text/json"
+   },
+   "auth": {
+      "identityProviders": {
+         "facebook": {
+            "registration": {
+               "appIdSettingName": "FACEBOOK_APP_ID",
+               "appSecretSettingName": "FACEBOOK_APP_SECRET"
+            }
+         }
+      }
    }
 }
