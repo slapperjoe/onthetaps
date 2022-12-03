@@ -1,0 +1,111 @@
+﻿@using OnTheTaps.Client.Types;
+
+<AuthorizeView>
+
+	<MudItem xs="12" md="6" lg="4">
+		<MudPaper Outlined="true" style="text-align: center; position: relative; padding: 16px; height: 100%; display: flex; flex-direction: column;">
+			@if (context.User.IsInRole("tochka"))
+			{
+				<InputFile id="@fileBox" OnChange="(e) => UploadImage(e)" hidden accept="image/png, image/gif, image/jpeg" />
+
+				<MudFab HtmlTag="label"
+				Color="Color.Dark"
+				Icon="@Icons.Filled.Image"
+				label="@tapLabel"
+				for="@fileBox" />
+			}
+			<MudElement Style="flex: 100000" />
+			<MudImage Fluid="true" Src="@imageUrl" Alt="@tapLabel" Elevation="25" Class="rounded-lg" />
+			<MudElement Style="flex: 100000" />
+
+			<MudTextField Disabled="!canEdit" @bind-Value="beer.name" Label="Name" Variant="Variant.Text" TextChanged="(t) => PerformUpdate(beer)" />
+			<MudTextField Disabled="!canEdit" @bind-Value="beer.brewer" Label="Brewer" Variant="Variant.Text" TextChanged="(t) => PerformUpdate(beer)" />
+			<MudTextField Disabled="!canEdit" @bind-Value="beer.beerType" Label="Type" Variant="Variant.Text" TextChanged="(t) => PerformUpdate(beer)" />
+			<MudGrid>
+				<MudItem md="4">
+					<MudNumericField Disabled="!canEdit" @bind-Value="beer.schooner" Label="Schooner" Variant="Variant.Text" T="double" Step="0.5" Format="F2"
+				  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" TextChanged="(t) => PerformUpdate(beer)" />
+				</MudItem>
+				<MudItem md="4">
+					<MudNumericField Disabled="!canEdit" @bind-Value="beer.squealer" Label="Squealer" Variant="Variant.Text" T="double" Step="0.5" Format="F2"
+				  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" TextChanged="(t) => PerformUpdate(beer)" />
+				</MudItem>
+				<MudItem md="4">
+					<MudNumericField Disabled="!canEdit" @bind-Value="beer.growler" Label="Growler" Variant="Variant.Text" T="double" Step="0.5" Format="F2"
+				  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" TextChanged="(t) => PerformUpdate(beer)" />
+				</MudItem>
+				<MudItem md="4">
+					<MudNumericField Disabled="!canEdit" @bind-Value="beer.percentage" Label="Percentage" Variant="Variant.Text" T="double" Format="F2" Min="0" Max="15" Step="0.1"
+				  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Percent" TextChanged="(t) => PerformUpdate(beer)" />
+				</MudItem>
+			</MudGrid>
+			@*<MudTextField @bind-Value="beer.description" Label="Description" Variant="Variant.Filled" Lines="5" TextChanged="(t) => PerformUpdate(t, beer)" />*@
+
+			@if (beer.changed && canEdit)
+			{
+				<MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Success" OnClick="() => UploadData()">Upload Changes</MudButton>
+			}
+
+			<div id='@($"loadingBox{tapNumber}")' class="tapLoadBox" style="display: none;" @ref=beerUpdateBox>	</div>
+
+
+		</MudPaper>
+	</MudItem>
+</AuthorizeView>
+
+@code {
+
+	[Parameter]
+	public int tapNumber { get; set; } = 1;
+
+	public string tapLabel
+	{
+		get { return "Tap " + tapNumber;	}
+	}
+
+	public ElementReference beerUpdateBox;
+
+	public string fileBox
+	{
+		get { return "fileInput" + tapNumber; }
+	}
+
+	[Parameter]
+	public BeerDTO beer { get; set; } = default!;
+
+	[Parameter]
+	public bool canEdit { get; set; } = false;
+
+	[Parameter]
+	public EventCallback beerUpdate { get; set; }
+
+	[Parameter]
+	public EventCallback updateData { get; set; }
+
+	[Parameter]
+	public EventCallback updateImage { get; set; }
+
+	protected async Task PerformUpdate(BeerDTO beer)
+	{
+		await beerUpdate.InvokeAsync(beer);
+	}
+
+	protected async Task UploadData()
+	{
+		await updateData.InvokeAsync(tapNumber);
+	}
+
+	protected async Task UploadImage(InputFileChangeEventArgs file)
+	{
+		await updateImage.InvokeAsync(new FileItemDTO(tapNumber, file, beerUpdateBox));
+	}
+
+	private string imageUrl
+	{
+		get
+		{
+			return $"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{tapNumber}.png?m={DateTime.Now.ToBinary()}";
+		}
+	}
+
+}

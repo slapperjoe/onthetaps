@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Types\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\me.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

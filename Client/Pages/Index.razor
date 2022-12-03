@@ -13,7 +13,9 @@
 @using MudBlazor
 @using System.Text;
 
+@using OnTheTaps.Client.Types;
 @using Types;
+@using OnTheTaps.Client.Components;
 
 @inject HttpClient Http
 @inject Services.BrowserService Browser
@@ -59,59 +61,15 @@
 					if (costList.Count() > i)
 					{
 						int localIndex = i + 1;
-						string tapLabel = "Tap " + localIndex;
-						string fileBox = "fileInput" + localIndex;
-
-						<MudItem xs="12" md="6" lg="4">
-							<MudPaper Outlined="true" style=" text-align: center; position: relative; padding: 16px; height: 100%; display: flex; flex-direction: column;">
-								@if (context.User.IsInRole("tochka")){
-								<InputFile id="@fileBox" OnChange="(e) => UploadFiles(localIndex, e)" hidden accept="image/png, image/gif, image/jpeg" />
-
-								<MudFab HtmlTag="label"
-						Color="Color.Dark"
-						Icon="@Icons.Filled.Image"
-						label="@tapLabel"
-				for="@fileBox" />
-								}
-								<MudElement Style="flex: 100000"></MudElement>
-								<MudImage Fluid="true" Src='@($"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{localIndex}.png?m={DateTime.Now.ToBinary()}")'
-						Alt="@tapLabel" Elevation="25" Class="rounded-lg" />
-
-								<MudElement Style="flex: 100000"></MudElement>
-
-								<MudTextField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].name" Label="Name" Variant="Variant.Text" TextChanged="(t) => updateChanged(t, costList[localIndex-1])" />
-								<MudTextField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].brewer" Label="Brewer" Variant="Variant.Text" TextChanged="(t) => updateChanged(t, costList[localIndex-1])" />
-								<MudTextField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].beerType" Label="Type" Variant="Variant.Text" TextChanged="(t) => updateChanged(t, costList[localIndex-1])" />
-								<MudGrid>
-									<MudItem md="4">
-										<MudNumericField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].schooner" Label="Schooner" Variant="Variant.Text" T="double" Step="0.5" Format="F2"
-							  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" TextChanged="(t) => updateChanged(String.Empty, costList[localIndex-1])" />
-									</MudItem>
-									<MudItem md="4">
-										<MudNumericField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].squealer" Label="Squealer" Variant="Variant.Text" T="double" Step="0.5" Format="F2"
-							  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" TextChanged="(t) => updateChanged(String.Empty, costList[localIndex-1])" />
-									</MudItem>
-									<MudItem md="4">
-										<MudNumericField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].growler" Label="Growler" Variant="Variant.Text" T="double" Step="0.5" Format="F2"
-							  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" TextChanged="(t) => updateChanged(String.Empty, costList[localIndex-1])" />
-									</MudItem>
-									<MudItem md="4">
-										<MudNumericField Disabled="!CanEdit" @bind-Value="costList[localIndex-1].percentage" Label="Percentage" Variant="Variant.Text" T="double" Format="F2" Min="0" Max="15" Step="0.1"
-							  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Percent" TextChanged="(t) => updateChanged(String.Empty, costList[localIndex-1])" />
-									</MudItem>
-								</MudGrid>
-								@*<MudTextField @bind-Value="costList[localIndex-1].description" Label="Description" Variant="Variant.Filled" Lines="5" TextChanged="(t) => updateChanged(t, costList[localIndex-1])" />*@
-
-								@if (costList[localIndex - 1].changed && CanEdit)
-								{
-									<MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.CloudUpload" Color="Color.Success" OnClick="() => UpdateData(localIndex)">Upload Changes</MudButton>
-								}
-
-								<div id='@($"loadingBox{localIndex}")' class="tapLoadBox" style="display: none;" @ref=imageRef[localIndex-1]>	</div>
-
-
-							</MudPaper>
-						</MudItem>
+						@if (context.User.IsInRole("tochka"))
+						{
+						<EditableTap beer="costList[localIndex-1]" 
+								tapNumber="@localIndex" 
+								canEdit="@CanEdit"
+								beerUpdate="@((upd) => updateChanged(upd as BeerDTO))" 
+								updateData="(i) => UpdateData((int)i)" 
+								updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
+						}
 					}
 				}
 				catch (Exception)
@@ -175,7 +133,7 @@
 		base.OnAfterRender(firstRender);
 	}
 
-	protected void updateChanged(string value, BeerDTO beerDTO)
+	protected void updateChanged(BeerDTO beerDTO)
 	{
 		if (readyForUpdate)
 		{
@@ -212,14 +170,14 @@
 		return null;
 	}
 
-	private async void UploadFiles(int i, InputFileChangeEventArgs e)
-	{
-		var fileName = e.File.Name;
-		fileName = i + fileName.Substring(e.File.Name.LastIndexOf('.'));
+	private async void UploadFiles(FileItemDTO fDTO)
+	{		
+		var fileName = fDTO.file.File.Name;
+		fileName = fDTO.tapNumber + fileName.Substring(fDTO.file.File.Name.LastIndexOf('.'));
 
 		var maxFileSize = 10240000;
 
-		var loadBox = imageRef[i - 1];
+		var loadBox = fDTO.loadBox;
 
 		await Browser.ShowLoadBox(loadBox);
 
@@ -227,9 +185,9 @@
 
 		try
 		{
-			var fileContent =	new StreamContent(e.File.OpenReadStream(maxFileSize));
+			var fileContent = new StreamContent(fDTO.file.File.OpenReadStream(maxFileSize));
 
-			fileContent.Headers.ContentType = new MediaTypeHeaderValue(e.File.ContentType);
+			fileContent.Headers.ContentType = new MediaTypeHeaderValue(fDTO.file.File.ContentType);
 
 			files.Add(new() { Name = fileName });
 
