@@ -4,7 +4,8 @@
       "exclude": [
          "/css/*",
          "/img/*",
-         "/js/*"
+         "/js/*",
+         "/get*"
       ]
    },
    "responseOverrides": {
@@ -14,6 +15,10 @@
       }
    },
    "routes": [
+      {
+         "route": "/get",
+         "redirect": "/dl/TapApp.appxbundle"
+      },
       {
          "route": "/api/*",
          "methods": [ "PUT", "POST", "PATCH", "DELETE" ],

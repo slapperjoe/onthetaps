@@ -14,21 +14,12 @@
 @using System.Text;
 
 <MudText Typo="Typo.h4" Class="login-title">Pick login provider</MudText>
-<MudGrid Justify="Justify.SpaceAround">
-	<MudItem xs="12" md="6" lg="4">
-		<MudFab Label="Microsoft" Icon="@Icons.Custom.Brands.Microsoft" Color="Color.Surface" OnClick='() => DoLogin("aad")'/>
-	</MudItem>
-	<MudItem xs="12" md="6" lg="4">
-		<MudFab Label="Twitter" Icon="@Icons.Custom.Brands.Twitter" Color="Color.Surface" OnClick='() => DoLogin("twitter")' />
-	</MudItem>
-	<MudItem xs="12" md="6" lg="4">
-		<MudFab Label="Google" Icon="@Icons.Custom.Brands.Google" Color="Color.Surface" OnClick='() => DoLogin("google")' />
-	</MudItem>
-	<MudItem xs="12" md="6" lg="4">
-		<MudFab Label="Github" Icon="@Icons.Custom.Brands.GitHub" Color="Color.Surface" OnClick='() => DoLogin("github")' />
-	</MudItem>
-
-</MudGrid>
+<MudStack>
+	<MudFab Label="Microsoft" Icon="@Icons.Custom.Brands.Microsoft" OnClick='() => DoLogin("aad")' Class="login-button microsoft" />
+	<MudFab Label="Twitter" Icon="@Icons.Custom.Brands.Twitter" OnClick='() => DoLogin("twitter")' Class="login-button twitter" />
+	<MudFab Label="Google" Icon="@Icons.Custom.Brands.Google" OnClick='() => DoLogin("google")' Class="login-button google" />
+	<MudFab Label="GitHub"  Icon="@Icons.Custom.Brands.GitHub" OnClick='() => DoLogin("github")' Class="login-button github" />
+</MudStack>
 
 @code {
 
