@@ -1,5 +1,7 @@
 ﻿@using OnTheTaps.Client.Types;
 
+@inject OnTheTaps.Client.Services.BrowserService Browser
+
 <AuthorizeView>
 
 	<MudItem xs="12" md="6" lg="4">
@@ -104,7 +106,7 @@
 	{
 		get
 		{
-			return $"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{tapNumber}.png?m={DateTime.Now.ToBinary()}";
+			return Browser.TapImage(tapNumber);
 		}
 	}
 

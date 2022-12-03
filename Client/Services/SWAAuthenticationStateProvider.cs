@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace Client.Authentication
+namespace OnTheTaps.Client.Authentication
 {
 	public class StaticWebAppsAuthenticationStateProvider : AuthenticationStateProvider
 	{

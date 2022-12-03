@@ -6,7 +6,7 @@ using BigBeerData.Shared;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 
-namespace Client.Services
+namespace OnTheTaps.Client.Services
 {
    public class BrowserService
    {
@@ -17,6 +17,16 @@ namespace Client.Services
       {
          _js = js;
       }    
+
+      public string TapJson(int tapNo)
+      {
+         return $"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{tapNo + 1}.json?m={DateTime.Now.ToBinary()}";
+		}
+
+      public string TapImage(int tapNo)
+      {
+         return $"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{tapNo}.png?m={DateTime.Now.ToBinary()}";
+      }
 
       public async Task<bool> ConsoleLog(string logContent)
       {

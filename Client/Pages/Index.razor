@@ -18,7 +18,7 @@
 @using OnTheTaps.Client.Components;
 
 @inject HttpClient Http
-@inject Services.BrowserService Browser
+@inject OnTheTaps.Client.Services.BrowserService Browser
 @inject ILogger<Index> Logger
 
 @inject IJSRuntime JSRuntime
@@ -51,48 +51,46 @@
 </style>
 
 
-<AuthorizeView>
-	<Authorized>
-		<MudGrid>
-			@for (int i = 0; i < TAP_COUNT; i++)
+
+
+	<MudGrid>
+		@for (int i = 0; i < TAP_COUNT; i++)
+		{
+			try
 			{
-				try
+				if (costList.Count() > i)
 				{
-					if (costList.Count() > i)
-					{
-						int localIndex = i + 1;
-						@if (context.User.IsInRole("tochka"))
-						{
-						<EditableTap beer="costList[localIndex-1]" 
-								tapNumber="@localIndex" 
-								canEdit="@CanEdit"
-								beerUpdate="@((upd) => updateChanged(upd as BeerDTO))" 
-								updateData="(i) => UpdateData((int)i)" 
-								updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
-						}
-					}
-				}
-				catch (Exception)
-				{
-					var f = i;
-					var bob = costList;
+					int localIndex = i + 1;
+					<AuthorizeView>
+						<Authorized>
+							<EditableTap beer="costList[localIndex-1]"
+							  tapNumber="@localIndex"
+							  canEdit="@context.User.IsInRole("tochka")"
+							  beerUpdate="@((upd) => updateChanged(upd as BeerDTO))"
+							  updateData="(i) => UpdateData((int)i)"
+							  updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
+						</Authorized>
+						<NotAuthorized>
+							<ReadonlyTap beer="costList[localIndex-1]"
+								tapNumber="@localIndex" />							
+						</NotAuthorized>
+					</AuthorizeView>
 				}
 			}
+			catch (Exception)
+			{
+				var f = i;
+				var bob = costList;
+			}
+		}
 
-		</MudGrid>
-	</Authorized>
-	<NotAuthorized>
-		<MudText Typo="Typo.body1">What's going on here??</MudText>
-	</NotAuthorized>
-</AuthorizeView>
+	</MudGrid>
 
 @code {
 
 	[Inject] private IDialogService DialogService { get; set; } = default!;
 
 	const int TAP_COUNT = 6;
-
-	bool CanEdit = false;
 
 	ElementReference[] imageRef { get; set; } = new ElementReference[TAP_COUNT];
 	List<BeerDTO> costList = new List<BeerDTO>();
@@ -110,7 +108,7 @@
 		{
 			try
 			{
-				var result = await Http.GetFromJsonAsync<BeerDTO>($"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{i + 1}.json?m={DateTime.Now.ToBinary()}");
+				var result = await Http.GetFromJsonAsync<BeerDTO>(Browser.TapJson(i+1));
 				costList.Add(result ?? new BeerDTO());
 			}
 			catch (Exception e)
@@ -119,9 +117,6 @@
 				costList.Add(new BeerDTO());
 			}
 		}
-		var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-		var user = authState.User;
-		CanEdit = user.IsInRole("tochka");
 	}
 
 	protected override void OnAfterRender(bool firstRender)
@@ -171,7 +166,7 @@
 	}
 
 	private async void UploadFiles(FileItemDTO fDTO)
-	{		
+	{
 		var fileName = fDTO.file.File.Name;
 		fileName = fDTO.tapNumber + fileName.Substring(fDTO.file.File.Name.LastIndexOf('.'));
 
@@ -205,15 +200,15 @@
 					fileName, ex.Message);
 
 			uploadResults.Add(new()
-						{
-							FileName = fileName,
-							ErrorCode = 6,
-							Uploaded = false
-						});
+				{
+					FileName = fileName,
+					ErrorCode = 6,
+					Uploaded = false
+				});
 		}
 		if (upload)
 		{
-			var response =	await Http.PostAsync("api/FileUpload",	content);
+			var response = await Http.PostAsync("api/FileUpload", content);
 
 			if (response.IsSuccessStatusCode)
 			{
@@ -222,5 +217,5 @@
 				StateHasChanged();
 			}
 		}
-	}	
+	}
 }

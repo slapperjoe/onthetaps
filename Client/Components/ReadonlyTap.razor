@@ -1,0 +1,64 @@
+﻿@using OnTheTaps.Client.Types;
+
+@inject Services.BrowserService Browser
+
+<MudItem xs="12" md="6" lg="4">
+	<MudPaper Outlined="true" style="position: relative; padding: 16px; height: 100%; display: flex; flex-direction: column;">
+		<MudText Align="Align.Left" Typo="Typo.h3">Tap @beer.tapNo</MudText>
+		<MudElement Style="flex: 100000" />
+		<MudImage Fluid="true" Src="@imageUrl" Alt="@tapLabel" Elevation="25" Class="rounded-lg" />
+		<MudElement Style="flex: 100000" />
+
+
+		<MudGrid>
+			<MudItem md="4">
+				<MudText Align="Align.Left" Typo="Typo.body1">Name: @beer.name</MudText>
+			</MudItem>
+			<MudItem md="4">
+				<MudText Align="Align.Center" Typo="Typo.body1">Brewer: @beer.brewer</MudText>
+			</MudItem>
+			<MudItem md="4">
+				<MudText Align="Align.Right" Typo="Typo.body1">Type: @beer.beerType</MudText>
+			</MudItem>
+			<MudItem md="4">
+				<MudText Align="Align.Left" Typo="Typo.body1">Schooner: @beer.schooner.ToString("C2")</MudText>
+			</MudItem>
+			<MudItem md="4">
+				<MudText Align="Align.Center" Typo="Typo.body1">Squealer: @beer.squealer.ToString("C2")</MudText>
+			</MudItem>
+			<MudItem md="4">
+				<MudText Align="Align.Right" Typo="Typo.body1">Growler: @beer.growler.ToString("C2")</MudText>
+			</MudItem>
+			<MudItem md="4">
+				<MudText Align="Align.Left" Typo="Typo.body1">Percentage: @beer.percentage.ToString("N2")%</MudText>
+			</MudItem>
+		</MudGrid>
+		@*<MudTextField @bind-Value="beer.description" Label="Description" Variant="Variant.Filled" Lines="5" TextChanged="(t) => PerformUpdate(t, beer)" />*@
+
+
+	</MudPaper>
+</MudItem>
+
+
+@code {
+
+	[Parameter]
+	public int tapNumber { get; set; } = 1;
+
+	public string tapLabel
+	{
+		get { return "Tap " + tapNumber; }
+	}
+
+	[Parameter]
+	public BeerDTO beer { get; set; } = default!;
+
+	private string imageUrl
+	{
+		get
+		{
+			return Browser.TapImage(tapNumber);
+		}
+	}
+
+}
