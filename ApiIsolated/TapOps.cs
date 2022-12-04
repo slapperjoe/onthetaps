@@ -16,7 +16,7 @@ using Microsoft.Azure.NotificationHubs;
 using System.Xml;
 using SixLabors.ImageSharp.Formats.Png;
 using Image = SixLabors.ImageSharp.Image;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using BigBeerData.Shared.DTOs;
 using System.Security.Claims;
 using System.Text.Json;
@@ -101,7 +101,7 @@ namespace Api.TapOps
       {
          var jsonString = await new StreamReader(req.Body).ReadToEndAsync();
 
-         var beerDto = JsonConvert.DeserializeObject<BeerDTO>(jsonString);
+			var beerDto = JsonSerializer.Deserialize<BeerDTO>(jsonString);
 
          string storageConnectionString = System.Environment.GetEnvironmentVariable("BigBeerStorageAccount") ?? String.Empty;
          try
