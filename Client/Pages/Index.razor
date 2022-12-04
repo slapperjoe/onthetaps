@@ -53,38 +53,37 @@
 
 
 
-	<MudGrid>
-		@for (int i = 0; i < TAP_COUNT; i++)
+<MudGrid>
+	@for (int i = 0; i < TAP_COUNT; i++)
+	{
+		try
 		{
-			try
+			if (costList.Count() > i)
 			{
-				if (costList.Count() > i)
-				{
-					int localIndex = i + 1;
-					<AuthorizeView>
-						<Authorized>
-							<EditableTap beer="costList[localIndex-1]"
-							  tapNumber="@localIndex"
-							  canEdit="@context.User.IsInRole("tochka")"
-							  beerUpdate="@((upd) => updateChanged(upd as BeerDTO))"
-							  updateData="(i) => UpdateData((int)i)"
-							  updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
-						</Authorized>
-						<NotAuthorized>
-							<ReadonlyTap beer="costList[localIndex-1]"
-								tapNumber="@localIndex" />							
-						</NotAuthorized>
-					</AuthorizeView>
-				}
-			}
-			catch (Exception)
-			{
-				var f = i;
-				var bob = costList;
+				int localIndex = i + 1;
+				<AuthorizeView>
+					<Authorized>
+						<EditableTap beer="costList[localIndex-1]"
+						  tapNumber="@localIndex"
+						  canEdit="@context.User.IsInRole("tochka")"
+						  beerUpdate="@((upd) => updateChanged(upd as BeerDTO))"
+						  updateData="@((b) => UpdateData(b as BeerItemDTO))"
+						  updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
+					</Authorized>
+					<NotAuthorized>
+						<ReadonlyTap beer="costList[localIndex-1]"
+					  tapNumber="@localIndex" />
+					</NotAuthorized>
+				</AuthorizeView>
 			}
 		}
+		catch (Exception e)
+		{
+			Logger.LogError(e.Message);
+		}
+	}
 
-	</MudGrid>
+</MudGrid>
 
 @code {
 
@@ -96,10 +95,7 @@
 	List<BeerDTO> costList = new List<BeerDTO>();
 	IDictionary<int, IBrowserFile> filesD = new Dictionary<int, IBrowserFile>();
 
-	List<File> files = new List<File>();
-	List<UploadResult> uploadResults = new List<UploadResult>();
 	bool upload = false;
-
 	bool readyForUpdate = false;
 
 	protected override async Task OnInitializedAsync()
@@ -108,7 +104,7 @@
 		{
 			try
 			{
-				var result = await Http.GetFromJsonAsync<BeerDTO>(Browser.TapJson(i+1));
+				var result = await Http.GetFromJsonAsync<BeerDTO>(Browser.TapJson(i + 1));
 				costList.Add(result ?? new BeerDTO());
 			}
 			catch (Exception e)
@@ -136,22 +132,17 @@
 		}
 	}
 
-	private async void UpdateData(int i)
+	private async void UpdateData(BeerItemDTO bDTO)//int i)
 	{
-		var loadBox = imageRef[i - 1];
-		await Browser.ShowLoadBox(loadBox);
+		await Browser.ShowLoadBox(bDTO.loadBox);
 
-		var toUpdate = costList[i - 1];
-		toUpdate.changed = false;
-		var js = JsonSerializer.Serialize(toUpdate);
-
-		var response =
-			await Http.PostAsync("api/DataUpload", new StringContent(JsonSerializer.Serialize(toUpdate), Encoding.UTF8, "application/json"));
+		var toUpdate = bDTO.beer;
+		var response =	await Http.PostAsync("api/DataUpload", new StringContent(JsonSerializer.Serialize(toUpdate), Encoding.UTF8, "application/json"));
 
 		await CheckResponse(response);
+		toUpdate.changed = false;
 
-		await Browser.HideLoadBox(loadBox);
-
+		await Browser.HideLoadBox(bDTO.loadBox);
 		StateHasChanged();
 	}
 
@@ -167,55 +158,21 @@
 
 	private async void UploadFiles(FileItemDTO fDTO)
 	{
-		var fileName = fDTO.file.File.Name;
-		fileName = fDTO.tapNumber + fileName.Substring(fDTO.file.File.Name.LastIndexOf('.'));
-
-		var maxFileSize = 10240000;
-
-		var loadBox = fDTO.loadBox;
-
-		await Browser.ShowLoadBox(loadBox);
-
+		await Browser.ShowLoadBox(fDTO.loadBox);
 		using var content = new MultipartFormDataContent();
-
 		try
 		{
-			var fileContent = new StreamContent(fDTO.file.File.OpenReadStream(maxFileSize));
-
-			fileContent.Headers.ContentType = new MediaTypeHeaderValue(fDTO.file.File.ContentType);
-
-			files.Add(new() { Name = fileName });
-
-			content.Add(
-					content: fileContent,
-					name: "\"files\"",
-					fileName: fileName);
-
-			upload = true;
+			content.Add(fDTO.GetFileStream(), "\"files\"", fDTO.fileName);
+			var response = await Http.PostAsync("api/FileUpload", content);
+			if (response.IsSuccessStatusCode)
+			{
+				await Browser.HideLoadBox(fDTO.loadBox);
+			}
 		}
 		catch (Exception ex)
 		{
-			Logger.LogInformation(
-					"{FileName} not uploaded (Err: 6): {Message}",
-					fileName, ex.Message);
-
-			uploadResults.Add(new()
-				{
-					FileName = fileName,
-					ErrorCode = 6,
-					Uploaded = false
-				});
+			Logger.LogInformation("{FileName} not uploaded (Err: 6): {Message}", fDTO.fileName, ex.Message);
 		}
-		if (upload)
-		{
-			var response = await Http.PostAsync("api/FileUpload", content);
-
-			if (response.IsSuccessStatusCode)
-			{
-				//Browser.RefreshImage(fileName);
-				await Browser.HideLoadBox(loadBox);
-				StateHasChanged();
-			}
-		}
+		StateHasChanged();
 	}
 }

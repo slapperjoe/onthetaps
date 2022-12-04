@@ -94,7 +94,7 @@
 
 	protected async Task UploadData()
 	{
-		await updateData.InvokeAsync(tapNumber);
+		await updateData.InvokeAsync(new BeerItemDTO(tapNumber, beer, beerUpdateBox));
 	}
 
 	protected async Task UploadImage(InputFileChangeEventArgs file)
