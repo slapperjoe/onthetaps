@@ -13,10 +13,6 @@
 		public string beerType { get; set; } = default!;
 		public double percentage { get; set; } = 5;
 
-		public bool changed
-		{
-			get;
-			set;
-		}
+		public bool changed { get; set; } = false;
 	}
 }
