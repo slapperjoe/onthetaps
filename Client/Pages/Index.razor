@@ -100,12 +100,13 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		for (int i = 0; i < TAP_COUNT; i++)
+		for (int i = 1; i <= TAP_COUNT; i++)
 		{
 			try
 			{
-				var result = await Http.GetFromJsonAsync<BeerDTO>(Browser.TapJson(i + 1));
+				var result = await Http.GetFromJsonAsync<BeerDTO>(Browser.TapJson(i));
 				result.changed = false;
+				result.tapNo = i;
 				costList.Add(result ?? new BeerDTO());
 			}
 			catch (Exception e)

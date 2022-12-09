@@ -20,7 +20,7 @@ namespace OnTheTaps.Client.Services
 
       public string TapJson(int tapNo)
       {
-         return $"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{tapNo + 1}.json?m={DateTime.Now.ToBinary()}";
+         return $"https://cs1c08048ede1dax4ddbx836.blob.core.windows.net/bigbeercontainer/{tapNo}.json?m={DateTime.Now.ToBinary()}";
 		}
 
       public string TapImage(int tapNo)
