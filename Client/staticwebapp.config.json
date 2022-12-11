@@ -16,11 +16,11 @@
    },
    "routes": [
       {
-         "route": "/get",
+         "route": "/getlink",
          "redirect": "https://www.microsoft.com/store/apps/9PMJ7WM3HNNB"
       },
       {
-         "route": "/app",
+         "route": "/get",
          "redirect": "ms-windows-store://pdp/?productid=9PMJ7WM3HNNB"
       },      
       {
