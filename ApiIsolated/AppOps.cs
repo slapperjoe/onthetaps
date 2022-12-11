@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -23,8 +24,10 @@ namespace ApiIsolated
 			response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 			try
 			{
-				string[] files = Directory.GetFiles(".", "*.*", SearchOption.AllDirectories);
-				response.WriteString(String.Join(",", files));
+				var dir = new DirectoryInfo("dl");
+				var updateFile = dir.GetFiles().ToList().OrderByDescending(a => a.CreationTime).FirstOrDefault();
+				var version = AssemblyName.GetAssemblyName(updateFile.FullName).Version;
+				response.WriteString("");
 			} catch (Exception ex)
 			{
 				response.StatusCode = HttpStatusCode.InternalServerError;

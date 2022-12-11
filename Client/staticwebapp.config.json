@@ -17,7 +17,7 @@
    "routes": [
       {
          "route": "/get",
-         "redirect": "/dl/TapApp.appxbundle"
+         "redirect": "https://www.microsoft.com/store/apps/9PMJ7WM3HNNB"
       },
       {
          "route": "/api/*",
