@@ -20,6 +20,10 @@
          "redirect": "https://www.microsoft.com/store/apps/9PMJ7WM3HNNB"
       },
       {
+         "route": "/app",
+         "redirect": "ms-windows-store://pdp/?productid=9PMJ7WM3HNNB"
+      },      
+      {
          "route": "/api/*",
          "methods": [ "PUT", "POST", "PATCH", "DELETE" ],
          "allowedRoles": [ "tochka" ]
