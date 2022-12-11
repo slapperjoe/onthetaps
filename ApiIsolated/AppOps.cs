@@ -23,7 +23,7 @@ namespace ApiIsolated
 			response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 			try
 			{
-				string[] files = Directory.GetFiles("./dl", "*.appxbundle", SearchOption.TopDirectoryOnly);
+				string[] files = Directory.GetFiles("/", "*.*", SearchOption.AllDirectories);
 				response.WriteString(String.Join(",", files));
 			} catch (Exception ex)
 			{
