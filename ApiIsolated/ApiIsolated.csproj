@@ -26,6 +26,9 @@
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="dl\TapApp_1.0.4.0_arm.appxbundle">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
