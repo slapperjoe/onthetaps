@@ -54,28 +54,25 @@
 
 
 <MudGrid>
-	@for (int i = 0; i < TAP_COUNT; i++)
+	@foreach (var tap in costList)
 	{
 		try
 		{
-			if (costList.Count() > i)
-			{
-				int localIndex = i + 1;
-				<AuthorizeView>
-					<Authorized>
-						<EditableTap beer="costList[localIndex-1]"
-						  tapNumber="@localIndex"
-						  canEdit="@context.User.IsInRole("tochka")"
-						  beerUpdate="@((upd) => updateChanged(upd as BeerDTO))"
-						  updateData="@((b) => UpdateData(b as BeerItemDTO))"
-						  updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
-					</Authorized>
-					<NotAuthorized>
-						<ReadonlyTap beer="costList[localIndex-1]"
-					  tapNumber="@localIndex" />
-					</NotAuthorized>
-				</AuthorizeView>
-			}
+			<AuthorizeView>
+				<Authorized>
+					<EditableTap beer="tap"
+					  tapNumber="@tap.tapNo"
+					  canEdit="@context.User.IsInRole("tochka")"
+					  beerUpdate="@((upd) => updateChanged(upd as BeerDTO))"
+					  updateData="@((b) => UpdateData(b as BeerItemDTO))"
+					  updateImage="@((f) => UploadFiles(f as FileItemDTO))" />
+				</Authorized>
+				<NotAuthorized>
+					<ReadonlyTap beer="tap"
+				  tapNumber="@tap.tapNo" />
+				</NotAuthorized>
+			</AuthorizeView>
+
 		}
 		catch (Exception e)
 		{
@@ -95,25 +92,18 @@
 	List<BeerDTO> costList = new List<BeerDTO>();
 	IDictionary<int, IBrowserFile> filesD = new Dictionary<int, IBrowserFile>();
 
-	bool upload = false;
 	bool readyForUpdate = false;
 
 	protected override async Task OnInitializedAsync()
 	{
-		for (int i = 1; i <= TAP_COUNT; i++)
+		try
 		{
-			try
-			{
-				var result = await Http.GetFromJsonAsync<BeerDTO>(Browser.TapJson(i));
-				result.changed = false;
-				result.tapNo = i;
-				costList.Add(result ?? new BeerDTO());
-			}
-			catch (Exception e)
-			{
-				Logger.LogError(e.Message);
-				costList.Add(new BeerDTO());
-			}
+			costList = await Http.GetFromJsonAsync<List<BeerDTO>>("api/Taplist");
+		}
+		catch (Exception e)
+		{
+			Logger.LogError(e.Message);
+			costList = new List<BeerDTO>();
 		}
 	}
 
@@ -139,7 +129,7 @@
 		await Browser.ShowLoadBox(bDTO.loadBox);
 
 		var toUpdate = bDTO.beer;
-		var response =	await Http.PostAsync("api/DataUpload", new StringContent(JsonSerializer.Serialize(toUpdate), Encoding.UTF8, "application/json"));
+		var response = await Http.PostAsync("api/DataUpload", new StringContent(JsonSerializer.Serialize(toUpdate), Encoding.UTF8, "application/json"));
 
 		await CheckResponse(response);
 		toUpdate.changed = false;

@@ -15,9 +15,9 @@
 			</MudItem>
 			<MudItem md="4">
 				<MudText Align="Align.Left" Typo="Typo.body1">
-					Schooner: @beer.schooner.ToString("C2")<br/>
-					Squealer: @beer.squealer.ToString("C2")<br/>
-					Growler: @beer.growler.ToString("C2")
+					Schooner: @beer.schooner.GetValueOrDefault(0).ToString("C2")<br/>
+					Squealer: @beer.squealer.GetValueOrDefault(0).ToString("C2")<br />
+					Growler: @beer.growler.GetValueOrDefault(0).ToString("C2")
 				</MudText>
 			</MudItem>
 			<MudItem md="8">

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using OnTheTaps.Client;
+using OnTheTaps.Shared.Models;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -15,5 +16,6 @@ builder.Services.AddMudServices()
 						.AddScoped<AuthenticationStateProvider, StaticWebAppsAuthenticationStateProvider>()
 						.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["API_Prefix"] ?? builder.HostEnvironment.BaseAddress) })
 						.AddScoped<BrowserService>();
+
 
 await builder.Build().RunAsync();
