@@ -20,18 +20,21 @@ using Image = SixLabors.ImageSharp.Image;
 using BigBeerData.Shared.DTOs;
 using System.Security.Claims;
 using System.Text.Json;
+using OnTheTaps.Shared.Models;
 
 namespace Api.TapOps
 {
    public class FileUpload
    {
       private readonly ILogger _logger;
+      private OnTheTapsContext tapContext;
 
       const string MD5Key = "ParsedMD5";
 
-      public FileUpload(ILoggerFactory loggerFactory)
+      public FileUpload(OnTheTapsContext tC, ILoggerFactory loggerFactory)
       {
          _logger = loggerFactory.CreateLogger<FileUpload>();
+         tapContext = tC;  
       }
 
       [Function("FileUpload")]
@@ -119,6 +122,21 @@ namespace Api.TapOps
             var props = await cloudBlockBlob.SetHttpHeadersAsync(new BlobHttpHeaders { ContentType = "application/json" });
 
             req.Body.Position = 0;
+
+            var tap = tapContext.Taps.FirstOrDefault(a => a.TapNo == beerDto.tapNo);
+            if (tap == null)
+            {
+               tap = new Tap { TapNo = beerDto.tapNo };
+            }
+            tap.BeerName = beerDto.name;
+            tap.Brewery = beerDto.brewer;
+            tap.Growler = (decimal)beerDto.growler;
+            tap.Schooner = (decimal)beerDto.schooner;
+            tap.Squealer = (decimal)beerDto.squealer;
+            tap.BeerType = beerDto.beerType;
+            tap.Percentage = (decimal)beerDto.percentage;
+
+            await tapContext.SaveChangesAsync();
 
 
             await this.SendNotification(cloudBlockBlob, fileName);

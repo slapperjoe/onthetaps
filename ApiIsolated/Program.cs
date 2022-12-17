@@ -18,7 +18,7 @@ var host = new HostBuilder()
       .ConfigureFunctionsWorkerDefaults()
         .ConfigureServices(builder =>
         {
-           builder.AddDbContext<BigBeerDataCoreContext>(opt =>
+           builder.AddDbContext<OnTheTapsContext>(opt =>
                                    opt.UseSqlServer(
                                        config["DBConnection"]
                                    ));
