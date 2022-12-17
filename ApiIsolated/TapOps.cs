@@ -130,9 +130,9 @@ namespace Api.TapOps
             }
             tap.BeerName = beerDto.name;
             tap.Brewery = beerDto.brewer;
-            tap.Growler = (decimal)beerDto.growler;
-            tap.Schooner = (decimal)beerDto.schooner;
-            tap.Squealer = (decimal)beerDto.squealer;
+            tap.Growler = beerDto.growler > 0 ? (decimal)beerDto.growler : null;
+            tap.Schooner = beerDto.schooner > 0 ? (decimal)beerDto.schooner : null;
+            tap.Squealer = beerDto.squealer > 0 ? (decimal)beerDto.squealer : null;
             tap.BeerType = beerDto.beerType;
             tap.Percentage = (decimal)beerDto.percentage;
 
