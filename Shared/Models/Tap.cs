@@ -43,4 +43,7 @@ public partial class Tap
 
     [StringLength(200)]
     public string ImageUrl { get; set; }
+
+   [Column(TypeName = "bit")]
+   public bool Empty { get; set; }
 }

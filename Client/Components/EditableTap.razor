@@ -5,6 +5,7 @@
 <AuthorizeView>
 
 	<MudItem xs="12" md="6" lg="4">
+		
 		<MudPaper Outlined="true" style="text-align: center; position: relative; padding: 16px; height: 100%; display: flex; flex-direction: column;">
 			@if (context.User.IsInRole("tochka"))
 			{
@@ -15,6 +16,10 @@
 				Icon="@Icons.Filled.Image"
 				label="@tapLabel"
 				for="@fileBox" />
+			}
+			@if (beer.empty)
+			{
+			<MudText Typo="Typo.h3">Marked as Empty</MudText>
 			}
 			<MudElement Style="flex: 100000" />
 			<MudImage Fluid="true" Src="@imageUrl" Alt="@tapLabel" Elevation="25" Class="rounded-lg" />

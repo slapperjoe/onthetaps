@@ -13,6 +13,14 @@
 		public string beerType { get; set; } = default!;
 		public decimal percentage { get; set; } = 5;
 
+		public bool empty { get; set; } = false;
+
 		public bool changed { get; set; } = false;
+	}
+
+	public class BeerVis
+	{
+		public int tapNo { get; set; } = default!;
+		public bool empty { get; set; } = false;
 	}
 }

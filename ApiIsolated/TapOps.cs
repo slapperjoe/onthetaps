@@ -21,6 +21,7 @@ using BigBeerData.Shared.DTOs;
 using System.Security.Claims;
 using System.Text.Json;
 using OnTheTaps.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.TapOps
 {
@@ -134,6 +135,7 @@ namespace Api.TapOps
 				tap.Schooner = beerDto.schooner > 0 ? (decimal)beerDto.schooner : null;
 				tap.Squealer = beerDto.squealer > 0 ? (decimal)beerDto.squealer : null;
 				tap.BeerType = beerDto.beerType;
+				tap.Empty = false;
 				tap.Percentage = (decimal)beerDto.percentage;
 
 				await tapContext.SaveChangesAsync();
@@ -175,10 +177,40 @@ namespace Api.TapOps
 					squealer = a.Squealer,
 					percentage = a.Percentage ?? 0,
 					tapNo = a.TapNo,
+					empty = a.Empty,
 					changed = false
 				}
 			);
 			await response.WriteAsJsonAsync(taps);
+			return response;
+		}
+
+		[Function("Taplist/{tapNo}")]
+		public async Task<HttpResponseData> GetTap([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, int tapNo)
+		{
+			var response = req.CreateResponse(HttpStatusCode.OK);
+			//response.Headers.Add("Content-Type", "application/json; charset=utf-8");
+
+			var tap = await tapContext.Taps.FirstOrDefaultAsync(a => a.TapNo == tapNo);
+			if (tap != null)
+			{
+				await response.WriteAsJsonAsync(new BeerDTO
+				{
+					beerType = tap.BeerType,
+					brewer = tap.Brewery,
+					name = tap.BeerName,
+					schooner = tap.Schooner,
+					growler = tap.Growler,
+					squealer = tap.Squealer,
+					percentage = tap.Percentage ?? 0,
+					tapNo = tap.TapNo,
+					empty = tap.Empty,
+					changed = false
+				});
+			} else
+			{
+				response.StatusCode = HttpStatusCode.InternalServerError;
+			}
 			return response;
 		}
 
@@ -209,6 +241,25 @@ namespace Api.TapOps
 				_logger.LogError(e, "Error checking upload");
 			}
 
+		}
+
+		[Function("UpdateAvailability")]
+		public async Task<HttpResponseData> SetAvailability([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+		{
+			var response = req.CreateResponse(HttpStatusCode.OK);
+			var jsonString = await new StreamReader(req.Body).ReadToEndAsync();
+
+			var beerUpdate = JsonSerializer.Deserialize<BeerVis>(jsonString);
+			if (beerUpdate != null)
+			{
+				var tap = tapContext.Taps.FirstOrDefault(x => x.TapNo == beerUpdate.tapNo);
+				if (tap != null)
+				{
+					tap.Empty = beerUpdate.empty;
+				}
+				await tapContext.SaveChangesAsync();
+			}
+			return response;
 		}
 
 		protected async Task<NotificationOutcome> SendNotification(BlockBlobClient blob, string name)

@@ -40,6 +40,8 @@ namespace OnTheTaps.Shared.Models.Taps
 		public decimal SquealerCost { get; set; }
 		[Column(TypeName = "money")]
 		public decimal GrowlerCost { get; set; }
+		[Column(TypeName = "bit")]
+		public bool Empty { get; set; }
 
 		public int VenueId { get; set; }
 		public virtual Venue Venue { get; set; }

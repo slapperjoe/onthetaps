@@ -4,26 +4,32 @@
 
 <MudItem xs="12" md="4" lg="3">
 	<MudPaper Outlined="true" style="position: relative; padding: 16px; height: 100%; display: flex; flex-direction: column;">
-		<MudText Align="Align.Left" Typo="Typo.h4">Tap @tapNumber @beer.name</MudText>		
-		<MudImage Fluid="true" Src="@imageUrl" Alt="@tapLabel" Elevation="25" Class="rounded-lg" />		
-		<MudGrid>
-			<MudItem md="8">
-				<MudText Align="Align.Left" Typo="Typo.h6">Brewer: @beer.brewer</MudText>
-			</MudItem>
-			<MudItem md="4">
-				<MudText Align="Align.Right" Typo="Typo.body1">Type: @beer.beerType</MudText>
-			</MudItem>
-			<MudItem md="4">
-				<MudText Align="Align.Left" Typo="Typo.body1">
-					Schooner: @beer.schooner.GetValueOrDefault(0).ToString("C2")<br/>
-					Squealer: @beer.squealer.GetValueOrDefault(0).ToString("C2")<br />
-					Growler: @beer.growler.GetValueOrDefault(0).ToString("C2")
-				</MudText>
-			</MudItem>
-			<MudItem md="8">
-				<MudText Align="Align.Right" Typo="Typo.body1">ABV: @beer.percentage.ToString("N2")%</MudText>
-			</MudItem>
-		</MudGrid>
+		@if (!beer.empty)
+		{
+			<MudText Align="Align.Left" Typo="Typo.h4">Tap @tapNumber @beer.name</MudText>
+			<MudImage Fluid="true" Src="@imageUrl" Alt="@tapLabel" Elevation="25" Class="rounded-lg" />			
+			<MudGrid>
+				<MudItem md="8">
+					<MudText Align="Align.Left" Typo="Typo.h6">Brewer: @beer.brewer</MudText>
+				</MudItem>
+				<MudItem md="4">
+					<MudText Align="Align.Right" Typo="Typo.body1">Type: @beer.beerType</MudText>
+				</MudItem>
+				<MudItem md="4">
+					<MudText Align="Align.Left" Typo="Typo.body1">
+						Schooner: @beer.schooner.GetValueOrDefault(0).ToString("C2")<br/>
+						Squealer: @beer.squealer.GetValueOrDefault(0).ToString("C2")<br />
+						Growler: @beer.growler.GetValueOrDefault(0).ToString("C2")
+					</MudText>
+				</MudItem>
+				<MudItem md="8">
+					<MudText Align="Align.Right" Typo="Typo.body1">ABV: @beer.percentage.ToString("N2")%</MudText>
+				</MudItem>
+			</MudGrid>
+		} else
+		{
+			<MudImage Fluid="true" Src="img/nobeer.png" Alt="@tapLabel" Elevation="25" Class="rounded-lg"/>
+		}
 		<MudElement Style="flex: 100000" />
 		@*<MudTextField @bind-Value="beer.description" Label="Description" Variant="Variant.Filled" Lines="5" TextChanged="(t) => PerformUpdate(t, beer)" />*@
 
