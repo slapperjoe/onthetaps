@@ -27,18 +27,18 @@
 				</MudSelect>
 				<MudLink Href="/Login">Login</MudLink>
 			</NotAuthorized>
-		</AuthorizeView>		
+		</AuthorizeView>
 	</MudAppBar>
 	<MudMainContent>
 		<MudContainer MaxWidth="MaxWidth.False">
-				@Body
+			@Body
 		</MudContainer>
 	</MudMainContent>
 </MudLayout>
 
 @code {
 
-		string venue = "Tochka";
+	string venue = "Tochka";
 
 
 	MudTheme BeerTheme = new MudTheme()
@@ -49,9 +49,8 @@
 				Secondary = Colors.Brown.Darken2,
 				AppbarBackground = Colors.Shades.White,
 				AppbarText = Colors.Brown.Darken3,
-				
+
 			},
 		};
-
-	}
+}
 
