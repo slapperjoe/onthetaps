@@ -12,7 +12,7 @@
 
 <MudLayout>
 	<MudAppBar>
-		<img src="/img/onthebeers.png" alt="On The Beers/Big Beer Data" style="max-height: 100%;" />
+		<img src="/img/onthetaps.png" alt="On The Taps" style="max-height: 100%;" />
 		<MudSpacer />
 		<AuthorizeView>
 			<Authorized>
@@ -22,6 +22,9 @@
 				<MudLink Href="/.auth/logout?post_logout_redirect_uri=/">Logout</MudLink>
 			</Authorized>
 			<NotAuthorized>
+				<MudSelect T="string" @bind-Value="@venue" label="Tap Venue">
+					<MudSelectItem Value="@("Tochka")">Tochka Beer Point</MudSelectItem>
+				</MudSelect>
 				<MudLink Href="/Login">Login</MudLink>
 			</NotAuthorized>
 		</AuthorizeView>		
@@ -34,6 +37,8 @@
 </MudLayout>
 
 @code {
+
+		string venue = "Tochka";
 
 
 	MudTheme BeerTheme = new MudTheme()
