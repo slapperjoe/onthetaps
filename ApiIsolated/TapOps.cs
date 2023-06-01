@@ -39,7 +39,7 @@ namespace Api.TapOps
 		}
 
 		[Function("FileUpload")]
-		public async Task<HttpResponseData> RunFileUpload([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
+		public async Task<HttpResponseData> RunFileUpload([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
 		{
 
 			var boundary = MultipartRequestHelper.GetBoundary(
@@ -101,7 +101,7 @@ namespace Api.TapOps
 		}
 
 		[Function("DataUpload")]
-		public async Task<HttpResponseData> RunDataUpload([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+		public async Task<HttpResponseData> RunDataUpload([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
 		{
 			var jsonString = await new StreamReader(req.Body).ReadToEndAsync();
 
@@ -161,7 +161,7 @@ namespace Api.TapOps
 		}
 
 		[Function("Taplist")]
-		public async Task<HttpResponseData> GetTaps([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+		public async Task<HttpResponseData> GetTaps([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
 		{
 			var response = req.CreateResponse(HttpStatusCode.OK);
 			//response.Headers.Add("Content-Type", "application/json; charset=utf-8");
@@ -186,7 +186,7 @@ namespace Api.TapOps
 		}
 
 		[Function("Taplist/{tapNo}")]
-		public async Task<HttpResponseData> GetTap([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, int tapNo)
+		public async Task<HttpResponseData> GetTap([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req, int tapNo)
 		{
 			var response = req.CreateResponse(HttpStatusCode.OK);
 			//response.Headers.Add("Content-Type", "application/json; charset=utf-8");
@@ -244,7 +244,7 @@ namespace Api.TapOps
 		}
 
 		[Function("UpdateAvailability")]
-		public async Task<HttpResponseData> SetAvailability([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+		public async Task<HttpResponseData> SetAvailability([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
 		{
 			var response = req.CreateResponse(HttpStatusCode.OK);
 			var jsonString = await new StreamReader(req.Body).ReadToEndAsync();

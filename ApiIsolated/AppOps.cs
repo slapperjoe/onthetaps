@@ -17,7 +17,7 @@ namespace ApiIsolated
 		}
 
 		[Function("LatestVersion")]
-		public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+		public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
 		{
 			_logger.LogInformation("C# HTTP trigger function processed a request.");
 			var response = req.CreateResponse(HttpStatusCode.OK);
